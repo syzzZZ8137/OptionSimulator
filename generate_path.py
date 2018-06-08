@@ -20,8 +20,7 @@ def Ret_path_gen(r,sigma,q,T,random):
     z = random
     dt = T/random.shape[1]
     
-    for i in range(random.shape[1]-1):
-        Ret_path[:,i+1] = np.exp((r-q-0.5*sigma**2)*dt+sigma*np.sqrt(dt)*z[:,i])  #产生收益率序列
+    Ret_path = np.exp((r-q-0.5*sigma**2)*dt+sigma*np.sqrt(dt)*z)  #产生收益率序列
     
     return Ret_path
 
@@ -31,8 +30,10 @@ def S_path_gen(S0,ret):
     S_path[:,0] = S0
     
     for i in range(ret.shape[1]-1):
-        S_path[:,i+1] = S_path[:,i]*ret[:,i+1]     #产生股价序列
-
+        if type(ret) == np.ndarray:
+            S_path[:,i+1] = S_path[:,i]*ret[:,i+1]    #产生股价序列
+        else:
+            S_path[:,i+1] = np.multiply(S_path[:,i],np.array(ret[:,i+1]).T[0])
     return S_path
 
 

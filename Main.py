@@ -64,7 +64,7 @@ def Main_Eu(S,K,T,Dayfreq,max_Dayfreq,sigma,r,q,option_type,Nsamples,Tsteps,mult
         
     stat = pd.DataFrame(stat,columns=['成交量(手)','PnL'])
     
-    return stat,Delta_path
+    return stat,S_path,Delta_path
 
 
 
@@ -76,15 +76,15 @@ if __name__ == '__main__':
     r = 0.01
     q = 0
     option_type = 'call'
-    price_date = pd.datetime(2018,7,1)        #期权报价日
-    maturity_date = pd.datetime(2018,10,1)    #期权到期日
-    multiplier = 5  #合约乘数
+    price_date = pd.datetime(2018,6,15)        #期权报价日
+    maturity_date = pd.datetime(2018,10,31)    #期权到期日
+    multiplier = 10  #合约乘数
     commis = 20 #每手手续费
-    threshold = 50  #期权头寸与期货头寸相差5手以内，不调仓
-    num = 1000 #对应标的总手数
+    threshold = 0  #期权头寸与期货头寸相差5手以内，不调仓
+    num = 2000 #对应标的总手数
     Dayfreq = 1  #每天对冲几次，最好应被max_Dayfreq整除
-    max_Dayfreq = 3 #每天产生的价格点，应大于Dayfreq ,i.e.与Tsteps有关。
-    Nsamples = 1000  #模拟样本数
+    max_Dayfreq = 1 #每天产生的价格点，应大于Dayfreq ,i.e.与Tsteps有关。
+    Nsamples = 500  #模拟样本数
     
     T =  (maturity_date-price_date).days/365
     Tsteps = (maturity_date-price_date).days*max_Dayfreq  #每天离散出max_Dayfreq个点
@@ -93,14 +93,16 @@ if __name__ == '__main__':
     
     '''调用'''
     V_price = Eu.BS_formula(S,K,T,r,sigma,q,option_type)*num*multiplier
-    stat,Delta_path = Main_Eu(S,K,T,Dayfreq,max_Dayfreq,sigma,r,q,option_type,Nsamples,Tsteps,multiplier,commis,threshold,num)
+    stat,S_path,Delta_path = Main_Eu(S,K,T,Dayfreq,max_Dayfreq,sigma,r,q,option_type,Nsamples,Tsteps,multiplier,commis,threshold,num)
     
     stat['成交量(手)'].plot(kind='hist',grid=True,color='blue')
     stat['成交量(手)'].plot(kind='density',grid=True,color='blue')
     stat['PnL'].plot(kind='hist',grid=True,color='red')
     stat['PnL'].plot(kind='density',grid=True,color='red')
+    plt.plot(S_path.T)
     print(stat.describe())
     print('期权费',V_price)
     print('净赚(期权费+对冲盈亏)',V_price+stat['PnL'].mean())
+    
 
 
