@@ -39,9 +39,10 @@ def hedge_PNL_usage(data,multiplier,commis,threshold):
     #data['累计总盈亏'] = np.cumsum(data['当日总盈亏'])
     
     data['成交量(手)'] = np.cumsum(abs(data['交易(手)']))
+    data['成交量(手)'] = data['成交量(手)']/multiplier
     data['持仓量(手)'] = np.cumsum(data['交易(手)'])
-    
-    PnL = sum(-data['交易(手)']*multiplier*data['交易价']) + sum(data['手续费'])  #手续费前面保存为负值，所以这里+
+    data['持仓量(手)'] = data['持仓量(手)']/multiplier
+    PnL = sum(-data['交易(手)']*data['交易价']) + sum(data['手续费'])  #手续费前面保存为负值，所以这里+
     
     return data,PnL
 
