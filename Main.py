@@ -49,9 +49,9 @@ def Main_Eu(S,K,T,Dayfreq,max_Dayfreq,sigma,sigma_simupath,r,q,option_type,Nsamp
                 for ii in range(len(K)):
                     tmp_delta += Eu.cpt_delta(S,K[ii],ttm,r,sigma[ii],q,option_type[ii])*num[ii]*multiplier
                     tmp_gamma += Eu.cpt_gamma(S,K[ii],ttm,r,sigma[ii],q)*num[ii]*multiplier
-                    tmp_vega += Eu.cpt_vega(S,r,sigma[ii],K[ii],ttm)*num[ii]*multiplier
-                    tmp_theta += Eu.cpt_theta(S,r,sigma[ii],K[ii],ttm,option_type[ii])*num[ii]*multiplier
-                    tmp_rho += Eu.cpt_rho(S,r,sigma[ii],K[ii],ttm,option_type[ii])*num[ii]*multiplier
+                    tmp_vega += Eu.cpt_vega(S,r,sigma[ii],K[ii],ttm)*num[ii]*multiplier/100
+                    tmp_theta += Eu.cpt_theta(S,r,sigma[ii],K[ii],ttm,option_type[ii])*num[ii]*multiplier/365
+                    tmp_rho += Eu.cpt_rho(S,r,sigma[ii],K[ii],ttm,option_type[ii])*num[ii]*multiplier/100
                     
                 if np.isnan(tmp_delta):
                     pass
